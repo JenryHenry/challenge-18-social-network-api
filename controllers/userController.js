@@ -40,10 +40,12 @@ module.exports = {
       if (!user) {
         return res.status(404).json({ message: 'No user with that ID' });
       }
+      res.json({ message: 'user deleted!' });
     } catch (err) {
       res.status(500).json(err);
     }
   },
+  // TODO: addNewFriend function
   async addNewFriend(req, res) {},
   async removeFriend(req, res) {
     try {
@@ -51,8 +53,12 @@ module.exports = {
       const friendId = req.params.friendId;
       const updatedUser = await User.findOneAndUpdate(
         { _id: userId },
-        { $pull: { friends: { _id: friendId } } }
+        { $pull: { friends: { _id: friendId } } },
+        { new: true }
       );
-    } catch (err) {}
+      res.json(updatedUser);
+    } catch (err) {
+      res.status(500).json(err);
+    }
   },
 };
